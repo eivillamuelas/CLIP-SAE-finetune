@@ -1,52 +1,85 @@
 ### CLIP finetune: SAE-informed adversarial training 💥🤖💫
 
-Descripción General
-Este repositorio contiene código experimental que combina CLIP (Contrastive Language-Image Pre-training) con Autoencoders Dispersos (SAE). Para código estable y probado, se recomienda consultar el repositorio zer0int/CLIP-fine-tune.
-Actualización (19/DIC/2024)
+# Ajuste fino de CLIP: Entrenamiento adversario basado en SAE 
+#### Un experimento de investigación
 
-Nuevo modelo SAE-Long-CLIP con precisión del 90% en ImageNet/ObjectNet
-Código disponible en este repositorio
-Modelo disponible en Hugging Face: zer0int/LongCLIP-SAE-ViT-L-14
+## Descripción General
+Este repositorio contiene código experimental que combina CLIP (Contrastive Language-Image Pre-training) con Autoencoders Dispersos (SAE). Para código estable y probado, se recomienda consultar el repositorio [zer0int/CLIP-fine-tune](https://github.com/zer0int/CLIP-fine-tune).
 
-Contenido del Repositorio
+## Actualización (19/DIC/2024)
+- Nuevo modelo SAE-Long-CLIP con precisión del 90% en ImageNet/ObjectNet
+- Código disponible en este repositorio
+- Modelo disponible en Hugging Face: [zer0int/LongCLIP-SAE-ViT-L-14](https://huggingface.co/zer0int/LongCLIP-SAE-ViT-L-14)
 
-Código utilizado para el ajuste fino del modelo CLIP-SAE-ViT-L-14
-Carpeta "attack" con datasets necesarios para 'a1-finetune.py'
-Scripts auxiliares:
+## Contenido del Repositorio
+1. Código utilizado para el ajuste fino del modelo [CLIP-SAE-ViT-L-14](https://huggingface.co/zer0int/CLIP-SAE-ViT-L-14)
+2. Carpeta "attack" con datasets necesarios para 'a1-finetune.py'
+3. Scripts auxiliares:
+   - a2: Conversión del modelo GmP a formato .weight para uso general
+   - a4: Pruebas rápidas de zero-shot en imágenes de ataque tipográfico
 
-a2: Conversión del modelo GmP a formato .weight para uso general
-a4: Pruebas rápidas de zero-shot en imágenes de ataque tipográfico
+## Metodología
+- Dataset de ataque curado mediante SAE, disponible en [Hugging Face](https://huggingface.co/datasets/zer0int/CLIP-adversarial-typographic-attack_text-image)
+- Enfoque: Parametrización Geométrica (GmP) + escalado de neuronas sensibles al texto
+- Base teórica: [Toy Models of Superposition](https://transformer-circuits.pub/2022/toy_model/index.html#geometry-perturb)
 
+## Implementación del Autoencoder
+- Arquitectura: Encoder-Decoder con pesos vinculados y función Top-K
+- Inspirado en investigaciones de:
+  - Anthropic.AI: ["Golden Gate Claude"](https://transformer-circuits.pub/2024/scaling-monosemanticity/)
+  - OpenAI: [Función de activación Top-K](https://arxiv.org/abs/2406.04093v1)
 
+## Observaciones del Autor
+- La efectividad óptima del SAE aún está en investigación
+- Diferentes dimensiones ocultas producen resultados variados:
+  - Dimensión pequeña: conceptos muy específicos
+  - Dimensión grande (8192): conceptos más aleatorios, menor precisión
+  - Dimensión intermedia: conceptos complejos pero significativos
 
-Metodología
+*Nota: El código del SAE será publicado después de una revisión y optimización exhaustiva.*
 
-Dataset de ataque curado mediante SAE, disponible en Hugging Face
-Enfoque: Parametrización Geométrica (GmP) + escalado de neuronas sensibles al texto
-Base teórica: Toy Models of Superposition
+---
 
-Implementación del Autoencoder
+# Texto Original
 
-Arquitectura: Encoder-Decoder con pesos vinculados y función Top-K
-Inspirado en investigaciones de:
-
-Anthropic.AI: "Golden Gate Claude"
-OpenAI: Función de activación Top-K
-
-
-
-Observaciones del Autor
-
-La efectividad óptima del SAE aún está en investigación
-Diferentes dimensiones ocultas producen resultados variados:
-
-Dimensión pequeña: conceptos muy específicos
-Dimensión grande (8192): conceptos más aleatorios, menor precisión
-Dimensión intermedia: conceptos complejos pero significativos
-
-
-
-Nota: El código del SAE será publicado después de una revisión y optimización exhaustiva.
+### CLIP finetune: SAE-informed adversarial training 💥🤖💫
+- ⚠️ This is EXPERIMENTAL code / a repo for messing with CLIP + Sparse Autoencoders (SAE)
+- For 'good, known-working' code (and more scripts + info), please see [zer0int/CLIP-fine-tune](https://github.com/zer0int/CLIP-fine-tune)!
+-----
+## Changes 19/DEC/2024:
+- New (best) SAE-informed Long-CLIP model with 90% ImageNet/ObjectNet accuracy.
+- Code is here, model is at my HF 🤗: [https://huggingface.co/zer0int/LongCLIP-SAE-ViT-L-14](https://huggingface.co/zer0int/LongCLIP-SAE-ViT-L-14)
+-----
+🔨
+- Contains the code used to fine-tune my model [HF: zer0int/CLIP-SAE-ViT-L-14](https://huggingface.co/zer0int/CLIP-SAE-ViT-L-14) 🤗
+- See the "attack" folder to obtain datasets required / used in 'a1-finetune.py'
+- Gradients will be very large throughout training. Comment out 'monitor_gradient_norms' as needed
+- Use a2 to convert GmP model back to .weight after fine-tune -> normal CLIP model (use in any 'import clip' downstream tasks)
+- Use a4 to quickly zero-shot test the 3 typographic attack test images provided
+-----
+🔎
+- The [attack dataset](https://huggingface.co/datasets/zer0int/CLIP-adversarial-typographic-attack_text-image) was curated via SAE
+- Selected for typographic attack salience (i.e. CLIP's 'text obsession' -> misclassifies image, as text is highly salient to model)
+- Fine-tune: Geometric Parametrization (GmP) + scaling of 'text salient' neurons top stimulating images (via SAE)
+- For details about GmP, see my other repo: [zer0int/CLIP-fine-tune](https://github.com/zer0int/CLIP-fine-tune)
+-----
+🔬
+- Info: [Toy Models of Superposition | Perturbing a single feature](https://transformer-circuits.pub/2022/toy_model/index.html#geometry-perturb)
+- Reasoning: Brute-force snap those geometric bonds, hoping to force CLIP model to find better (less text obsessed) solution 😅
+- ...Until I learn / find out what I am actually doing here (with regard to Sparse Autoencoders), at least. =)
+- Sparse Autoencoder inspiration:
+- Anthropic.AI research ["Golden Gate Claude"](https://transformer-circuits.pub/2024/scaling-monosemanticity/) + [SAE details](https://transformer-circuits.pub/2024/april-update/index.html#training-saes)
+- OpenAI: Top-K activation function (replace ReLU in Sparse Autoencoders), [arxiv](https://arxiv.org/abs/2406.04093v1)
+-----
+💡❓
+- My SAE: Encoder-Decoder, tied weights + Top-K (puzzled together from the above!)
+- Is this a good autoencoder for CLIP? I don't know. 🤔
+- Small hidden dimension + low Top-K => very sparse -> will learn concepts from CLIP that [with SAE-reconstructed embeds] retrieve images of very narrow concepts, e.g. ONLY stop signs.
+- Huge hidden dimension (e.g. 8192) -> not so sparse, accuracy drops, more (seemingly) random encoded concepts (judging via image retrieval)
+- Intermediate -> Learns complex, surprising, but meaningful concepts that are 'totally an AI-thing to encode'
+- Alas: SAE empirically shown to be 'working', but is it good? What is BEST? 🤔
+- Should I be using projection? Going 'back up' in the model with pinv? Hook into residual stream? I don't (yet) know! 🤷
+- I will publish the code for the SAE once I am more confident in that I know what I am actually doing (and cleaned up the mess of a code 😂).
 
 ---
 
