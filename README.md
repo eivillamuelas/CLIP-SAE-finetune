@@ -1,7 +1,4 @@
-### CLIP finetune: SAE-informed adversarial training 💥🤖💫
-
-# Ajuste fino de CLIP: Entrenamiento adversario basado en SAE 
-#### Un experimento de investigación
+# CLIP finetune: SAE-informed adversarial training 💥🤖
 
 ## Descripción General
 Este repositorio contiene código experimental que combina CLIP (Contrastive Language-Image Pre-training) con Autoencoders Dispersos (SAE). Para código estable y probado, se recomienda consultar el repositorio [zer0int/CLIP-fine-tune](https://github.com/zer0int/CLIP-fine-tune).
